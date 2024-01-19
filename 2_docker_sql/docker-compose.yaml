@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: 
+      POSTGRES_PASSWORD:
+      POSTGRES_DB:
+    volumes:
+      - postgres-db-volume:/var/lib/posgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready","-U","airflow"]
+      interval: 5s
+      retries: 5
+    restart: always
+
+
+
+
