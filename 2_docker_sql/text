@@ -1,9 +1,40 @@
+#Postgres
+winpty docker run -it \
+  -e POSTGRES_USER="root" \
+  -e POSTGRES_PASSWORD="root" \
+  -e POSTGRES_DB="ny_taxi" \
+  -v /d:/data_engineering/zoomcamp/2_docker_sql/ny_taxi_pg_data:/var/lib/postgresql/data \
+  -p 5432:5432 \
+  postgres:13
+
+#THESE WORK MOST LIKELY BECAUSE OF THE FORWARD SLASH IN THE BEGINNING
+  -v /d:/data_engineering/zoomcamp/2_docker_sql/ny_taxi_pg_data:/var/lib/postgresql/data \
+  -v //d/data_engineering/zoomcamp/2_docker_sql/ny_taxi_pg_data:/var/lib/postgresql/data \
+
+#THESE DO NOT MOUNT PROPERLY FOR SOME REASON IDK
+  --mount type=bind,source=$(pwd)/ny_taxi_pg_data,target=/var/lib/posgresql/data \
+  -v $(pwd)/ny_taxi_pg_data:/var/lib/postgresql/data \
+
+#Pgcli
+winpty pgcli -h localhost -p 5432 -u root -d ny_taxi
+
+#Pgadmin 
+winpty docker run -it \
+  -e PGADMIN_DEFAULT_EMAIL="admin@admin.com" \
+  -e PGADMIN_DEFAULT_PASSWORD="root" \
+  -p 8080:80 \
+  dpage/pgadmin4
+
+#Postgress with Network
+
+winpty docker network create pg-network
+
 winpty docker run -it \
   -e POSTGRES_USER="root" \
   -e POSTGRES_PASSWORD="root" \
   -e POSTGRES_DB="ny_taxi" \
   -v $(pwd)/ny_taxi_pg_data:/var/lib/postgresql/data \
   -p 5432:5432 \
+  --network=pg-network \
+  --name pg-database \
   postgres:13
-
-winpty pgcli -h localhost -p 5432 -u root -d ny_taxi
