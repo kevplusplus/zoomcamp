@@ -1,18 +1,23 @@
 services:
-  postgres:
+  pgdatabase:
     image: postgres:13
     environment:
-      POSTGRES_USER:"root"
-      POSTGRES_PASSWORD:"root"
-      POSTGRES_DB:"ny_taxi"
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=ny_taxi
     volumes:
-      - postgres-db-volume:"/var/lib/posgresql/data"
-    healthcheck:
-      test: ["CMD", "pg_isready","-U","airflow"]
-      interval: 5s
-      retries: 5
-    restart: always
-
+      - ./ny_taxi_pg_data:/var/lib/posgresql/data:rw
+    ports:
+      - "5432:5432"
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+      - ./data_pgadmin:/var/lib/pgadmin
+    ports:
+      - "8080:80"
 
 
 
