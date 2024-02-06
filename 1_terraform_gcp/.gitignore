@@ -1,0 +1,5 @@
+# ignore terraform backup files
+.terraform
+terraform.*
+.terraform.lock.hcl
+keys/
