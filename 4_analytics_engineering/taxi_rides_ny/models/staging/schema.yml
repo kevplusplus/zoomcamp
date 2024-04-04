@@ -1,0 +1,12 @@
+version: 2
+
+sources:
+  - name: staging
+    database: fast-banner-412410
+    schema: dbt_ny_taxi_data
+
+    tables:
+      - name: green_tripdata
+      - name: yellow_tripdata
+
+   
