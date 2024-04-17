@@ -1,9 +1,9 @@
 {{ config(materialized='table') }}
 
 with fhv_tripdata as (
-    SELECT *
+    SELECT *,
+        'Fhv' as service_type
     FROM {{ ref('stg_fhv_tripdata') }}
-    WHERE EXTRACT(YEAR FROM pickup_datetime) = 2019 AND (pickup_locationid IS NOT NULL OR dropoff_locationid IS NOT NULL)
 ),
 dim_zones as (
     SELECT *
@@ -12,7 +12,6 @@ dim_zones as (
 )
 
 SELECT 
-    fhv_tripdata.trip_id,
     fhv_tripdata.dispatching_base_num, 
     fhv_tripdata.affiliated_base_num, 
     fhv_tripdata.pickup_locationid, 
@@ -23,6 +22,7 @@ SELECT
     dropoff_zone.zone as dropoff_zone,
     fhv_tripdata.pickup_datetime, 
     fhv_tripdata.dropoff_datetime,
+    fhv_tripdata.service_type,
     fhv_tripdata.sr_flag 
 FROM fhv_tripdata
 INNER JOIN dim_zones as pickup_zone
